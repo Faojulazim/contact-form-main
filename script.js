@@ -1,7 +1,6 @@
-const radioBtn = document.querySelectorAll("[data-radio]");
 const radioDiv = document.querySelectorAll("[data-radiodiv]");
-const radioCheck = document.querySelector("[data-radiobtn]");
 const consent = document.querySelector("#consent");
+const radioCheck = document.querySelector("[data-radiobtn]");
 const firstName = document.querySelector("#fName");
 const lastName = document.querySelector("#lName");
 const email = document.querySelector("#emailAddr");
@@ -10,8 +9,8 @@ const submit = document.querySelector("#submitBtn");
 const form = document.querySelector("form");
 
 let isChecked = false;
-let clickedElem;
 let radioIsChecked = false;
+let checkedElem;
 
 consent.addEventListener("click", () => {
   isChecked = !isChecked;
@@ -20,59 +19,42 @@ consent.addEventListener("click", () => {
   );
 });
 
-radioDiv.forEach((element) => {
-  element.addEventListener("click", (e) => {
-    const input = element.querySelector("input");
-    input.checked = !input.checked;
-    if (input.checked) {
-      element.classList.add("bg-Green200Lighter");
-      input.classList.add("bg-[url('assets/images/icon-radio-selected.svg')]");
-      input.classList.add("border-0");
-    } else {
-      element.classList.remove("bg-Green200Lighter");
-      input.classList.remove(
-        "bg-[url('assets/images/icon-radio-selected.svg')]"
-      );
-      input.classList.remove("border-0");
-    }
-    clickedElem = element;
-    radioDiv.forEach((anotherElement) => {
-      if (anotherElement !== element) {
-        const anotherInput = anotherElement.querySelector("input");
-        anotherInput.checked = false;
-        anotherElement.classList.remove("bg-Green200Lighter");
-        anotherInput.classList.remove(
-          "bg-[url('assets/images/icon-radio-selected.svg')]"
-        );
-        anotherInput.classList.remove("border-0");
-      }
-    });
-    validateRadioButtons();
-  });
-});
-
-function validateRadioButtons() {
+radioDiv.forEach((value) => {
   radioIsChecked = false;
-
-  radioDiv.forEach((elem) => {
-    if (elem.querySelector("input").checked) {
+  value.addEventListener("click", (e) => {
+    if (value.classList.contains("bg-Green200Lighter")) {
+      radioIsChecked = false;
+    } else {
       radioIsChecked = true;
     }
-  });
+    checkedElem = value;
+    value.querySelector("input").checked = true;
+    value
+      .querySelector("input")
+      .classList.toggle("bg-[url('assets/images/icon-radio-selected.svg')]");
+    value.querySelector("input").classList.toggle("border");
+    value.classList.toggle("bg-Green200Lighter");
 
-  const errorMessage =
-    radioDiv[0].parentElement.parentElement.parentElement.lastElementChild;
-  if (radioIsChecked) {
-    errorMessage.classList.add("hidden");
-  } else {
-    errorMessage.classList.remove("hidden");
-  }
-}
+    radioDiv.forEach((anotherValue) => {
+      if (value !== anotherValue) {
+        anotherValue.querySelector("input").checked = true;
+        anotherValue
+          .querySelector("input")
+          .classList.remove(
+            "bg-[url('assets/images/icon-radio-selected.svg')]"
+          );
+        anotherValue.querySelector("input").classList.add("border");
+        anotherValue.classList.remove("bg-Green200Lighter");
+      }
+    });
+  });
+});
 
 function validation() {
   let regex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
   let emailValue = email.value;
   let isValid = true;
+
   if (!firstName.value.length) {
     firstName.nextElementSibling.classList.remove("hidden");
     firstName.classList.add("border-Red");
@@ -90,6 +72,7 @@ function validation() {
     lastName.nextElementSibling.classList.add("hidden");
     lastName.classList.remove("border-Red");
   }
+
   if (!emailValue.length) {
     email.nextElementSibling.innerText = "This field is required";
     email.nextElementSibling.classList.remove("hidden");
@@ -109,7 +92,7 @@ function validation() {
     message.nextElementSibling.classList.remove("hidden");
     message.classList.add("border-Red");
     isValid = false;
-  } else if (message.value.length < 50) {
+  } else if (message.value.length < 1) {
     message.nextElementSibling.classList.remove("hidden");
     message.nextElementSibling.innerText = "Message must include 50 characters";
     isValid = false;
@@ -125,12 +108,18 @@ function validation() {
   } else {
     document.querySelector("#consentPara").classList.add("hidden");
   }
-  validateRadioButtons();
+  if (radioIsChecked) {
+    document.querySelector("#please").classList.add("hidden");
+  } else {
+    document.querySelector("#please").classList.remove("hidden");
+    isValid = false;
+  }
   return isValid;
 }
 
 submit.addEventListener("click", (e) => {
   e.preventDefault();
+  console.log(checkedElem);
   if (validation() && radioIsChecked) {
     isChecked = false;
     document.getElementById("hiddenDiv").classList.remove("hidden");
@@ -138,21 +127,24 @@ submit.addEventListener("click", (e) => {
     firstName.value = "";
     lastName.value = "";
     message.value = "";
-    clickedElem.classList.remove("bg-Green200Lighter");
-    clickedElem.querySelector("input").checked = false;
-    clickedElem
+
+    checkedElem.classList.remove("bg-Green200Lighter");
+    checkedElem.querySelector("input").checked = false;
+    checkedElem
       .querySelector("input")
       .classList.remove("bg-[url('assets/images/icon-radio-selected.svg')]");
-    clickedElem.querySelector("input").classList.remove("border-0");
+    checkedElem.querySelector("input").classList.add("border");
+
     radioCheck.classList.remove(
       "bg-[url('assets/images/icon-checkbox-check.svg')]"
     );
-
+    radioIsChecked = false;
     setTimeout(() => {
       document.getElementById("hiddenDiv").classList.add("hidden");
     }, 5000);
   }
 });
+
 form.addEventListener("input", (e) => {
   validation();
   e.preventDefault();
