@@ -109,7 +109,7 @@ function validation() {
     message.nextElementSibling.classList.remove("hidden");
     message.classList.add("border-Red");
     isValid = false;
-  } else if (message.value.length < 1) {
+  } else if (message.value.length < 50) {
     message.nextElementSibling.classList.remove("hidden");
     message.nextElementSibling.innerText = "Message must include 50 characters";
     isValid = false;
