@@ -122,7 +122,9 @@ submit.addEventListener("click", (e) => {
   console.log(checkedElem);
   if (validation() && radioIsChecked) {
     isChecked = false;
-    document.getElementById("hiddenDiv").classList.remove("hidden");
+    document
+      .getElementById("hiddenDiv")
+      .classList.remove("translate-y-[-200%]");
     email.value = "";
     firstName.value = "";
     lastName.value = "";
@@ -140,7 +142,7 @@ submit.addEventListener("click", (e) => {
     );
     radioIsChecked = false;
     setTimeout(() => {
-      document.getElementById("hiddenDiv").classList.add("hidden");
+      document.getElementById("hiddenDiv").classList.add("translate-y-[-200%]");
     }, 5000);
   }
 });
