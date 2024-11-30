@@ -20,7 +20,6 @@ consent.addEventListener("click", () => {
 });
 
 radioDiv.forEach((value) => {
-  radioIsChecked = false;
   value.addEventListener("click", (e) => {
     if (value.classList.contains("bg-Green200Lighter")) {
       radioIsChecked = false;
@@ -37,7 +36,7 @@ radioDiv.forEach((value) => {
 
     radioDiv.forEach((anotherValue) => {
       if (value !== anotherValue) {
-        anotherValue.querySelector("input").checked = true;
+        anotherValue.querySelector("input").checked = false;
         anotherValue
           .querySelector("input")
           .classList.remove(
